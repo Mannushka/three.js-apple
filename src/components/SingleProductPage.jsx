@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Navbar from "./Navbar";
 import { BACKEND_URL } from "../constantVariables";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Grid, Stack, Container, Typography } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import "./SingleProductPage.css";
 import { formatCurrency } from "../utils/formatCurrency";
 import AddToCartButton from "./buttons/AddToCartButton";
+import CartContext from "./context/cart/CartContext";
 
 const SingleProductPage = () => {
   const [product, setProduct] = useState({});
   const [productId, setProductId] = useState();
+  const { getCartItemQuantity } = useContext(CartContext);
 
   const getProductInfo = async () => {
     if (productId) {
@@ -34,15 +36,26 @@ const SingleProductPage = () => {
 
   const price = formatCurrency(product.price);
 
-  // Store a new JSX element for each property in product details
-  // const productDetails = [];
-  // if (product) {
-  //   for (const key in product) {
-  //     productDetails.push(<p key={key}>{`${key}: ${product[key]}`}</p>);
-  //   }
-  // }
+  // const quantityInCart = 0;
+  const { cartItems } = useContext(CartContext);
+  console.log(cartItems);
 
-  const quantityInCart = 0;
+  const itemCounts = cartItems.reduce((count, item) => {
+    const itemId = item.id;
+    count[itemId] = (count[itemId] || 0) + 1;
+    return count;
+  }, {}); // return an obj that stores number of copies of each item placed in cart
+
+  // console.log(itemCounts);
+
+  const calcNumOfCurrItemInCart = (id) => {
+    const isProductInCart = id in itemCounts; // check if this product is in cart
+    if (isProductInCart) return itemCounts[id];
+    else return 0;
+  };
+
+  const quantityInCart = calcNumOfCurrItemInCart(product.id);
+  console.log(getCartItemQuantity(product.id));
 
   const productDetails = (
     <div>
@@ -71,7 +84,10 @@ const SingleProductPage = () => {
             <div className="in-stock">
               In stock: {product.stock_left && product.stock_left}
             </div>
-            <AddToCartButton quantityInCart={quantityInCart} />
+            <AddToCartButton
+              quantityInCart={quantityInCart}
+              product={product}
+            />
           </Stack>
         </Grid>
       </Grid>

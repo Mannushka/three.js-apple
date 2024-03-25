@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -9,12 +9,18 @@ import { formatCurrency } from "../utils/formatCurrency";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddToCartButton from "./buttons/AddToCartButton";
 import { useNavigate } from "react-router-dom";
+import CartContext from "./context/cart/CartContext";
 
 const ProductCard = ({ product }) => {
-  console.log(product);
-  const price = formatCurrency(product.price);
-  const quantityInCart = 0; // for testing purposes the quantity in cart is hard coded
   const navigate = useNavigate();
+  console.log(product);
+
+  const price = formatCurrency(product.price);
+  // const quantityInCart = 0; // for testing purposes the quantity in cart is hard coded
+  const { cartItems, getCartItemQuantity } = useContext(CartContext);
+  console.log(cartItems);
+  console.log(getCartItemQuantity(product.id));
+
   const handleLearnClick = () => {
     navigate(`/products/${product.id}`);
   };
@@ -45,7 +51,7 @@ const ProductCard = ({ product }) => {
               Learn More
             </Button>
           </div>
-          <AddToCartButton quantityInCart={quantityInCart} />
+          <AddToCartButton product={product} />
         </CardActions>
       </Card>
     </div>

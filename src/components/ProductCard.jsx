@@ -9,9 +9,13 @@ import { formatCurrency } from "../utils/formatCurrency";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddToCartButton from "./buttons/AddToCartButton";
 import { useNavigate } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
+import { useContext } from "react";
 
 const ProductCard = ({ product }) => {
+  const { addToCart, cartItems } = useContext(CartContext);
   console.log(product);
+  console.log(cartItems);
   const price = formatCurrency(product.price);
   const quantityInCart = 0; // for testing purposes the quantity in cart is hard coded
   const navigate = useNavigate();
@@ -45,7 +49,8 @@ const ProductCard = ({ product }) => {
               Learn More
             </Button>
           </div>
-          <AddToCartButton quantityInCart={quantityInCart} />
+          <AddToCartButton quantityInCart={quantityInCart} product={product} />
+          {/* <Button onClick={() => addToCart(product.id)}>Add to cart</Button> */}
         </CardActions>
       </Card>
     </div>

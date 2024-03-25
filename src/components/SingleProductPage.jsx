@@ -16,8 +16,8 @@ const SingleProductPage = () => {
     if (productId) {
       axios.get(`${BACKEND_URL}/products/${productId}`).then((response) => {
         setProduct(response.data);
-        console.log(response.data);
-        console.log(product);
+        // console.log(response.data);
+        // console.log(product);
       });
     }
   };
@@ -41,8 +41,6 @@ const SingleProductPage = () => {
   //     productDetails.push(<p key={key}>{`${key}: ${product[key]}`}</p>);
   //   }
   // }
-
-  const quantityInCart = 0;
 
   const productDetails = (
     <div>
@@ -71,7 +69,7 @@ const SingleProductPage = () => {
             <div className="in-stock">
               In stock: {product.stock_left && product.stock_left}
             </div>
-            <AddToCartButton quantityInCart={quantityInCart} />
+            <AddToCartButton product={product} />
           </Stack>
         </Grid>
       </Grid>
